@@ -1,0 +1,256 @@
+/* ==========================================
+   Compact Forum Widget
+   ========================================== */
+
+.CompactWidget {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.CompactWidget--expanded {
+    z-index: 1000;
+}
+
+/* --- Stats bar --- */
+
+.CompactWidget-bar {
+    display: flex;
+    align-items: center;
+    padding: 5px 8px;
+    border-radius: 6px;
+    background: var(--control-bg, rgba(0, 0, 0, 0.04));
+    border: 1px solid var(--control-bg, rgba(0, 0, 0, 0.06));
+    min-height: 28px;
+    gap: 4px;
+}
+
+.CompactWidget-stats {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 4px;
+    min-width: 0;
+}
+
+/* --- Stat items --- */
+
+.CompactWidget-stat {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    font-size: 11px;
+    color: var(--muted-more-color, #999);
+    cursor: default;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.CompactWidget-stat span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.CompactWidget-stat i {
+    font-size: 10px;
+    opacity: 0.6;
+    flex-shrink: 0;
+}
+
+/* Online users stat — green icon */
+.CompactWidget-stat--online i {
+    color: #4CAF50;
+    opacity: 1;
+}
+
+/* --- Toggle arrow --- */
+
+.CompactWidget-toggle {
+    flex-shrink: 0;
+    align-self: center;
+    padding: 2px 4px !important;
+    min-width: 0 !important;
+    opacity: 0.4;
+    transition: opacity 0.15s;
+}
+
+.CompactWidget-toggle:hover {
+    opacity: 1;
+}
+
+.CompactWidget-toggle i {
+    font-size: 9px !important;
+}
+
+/* --- Expanded overlay panel --- */
+
+.CompactWidget-expanded {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: var(--body-bg, #fff);
+    border: 1px solid var(--control-bg, rgba(0, 0, 0, 0.1));
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    padding: 8px 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    animation: compactWidgetSlideDown 0.15s ease-out;
+}
+
+@keyframes compactWidgetSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.CompactWidget-expandedSection {
+    margin-bottom: 6px;
+}
+
+.CompactWidget-expandedSection:last-child {
+    margin-bottom: 0;
+}
+
+.CompactWidget-expandedLabel {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted-more-color, #999);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+}
+
+/* Green dot in expanded label */
+.CompactWidget-greenDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #4CAF50;
+    flex-shrink: 0;
+}
+
+/* Scrollable online users list */
+.CompactWidget-expandedUsersList {
+    max-height: 220px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.CompactWidget-expandedUser {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    text-decoration: none;
+    color: var(--text-color, inherit);
+    padding: 3px 4px;
+    border-radius: 4px;
+    transition: background 0.1s;
+}
+
+.CompactWidget-expandedUser:hover {
+    background: var(--control-bg, rgba(0, 0, 0, 0.04));
+    text-decoration: none;
+}
+
+.CompactWidget-expandedUser--overflow {
+    cursor: default;
+}
+
+.CompactWidget-expandedUser--overflow:hover {
+    background: transparent;
+}
+
+.CompactWidget-expandedUser--hidden {
+    cursor: default;
+}
+
+.CompactWidget-expandedUser--hidden:hover {
+    background: transparent;
+}
+
+.CompactWidget-expandedUser .Avatar {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    flex-shrink: 0;
+}
+
+.CompactWidget-expandedUsername {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+.CompactWidget-expandedUsername--muted {
+    color: var(--muted-color, #aab2bd);
+    font-style: italic;
+    font-size: 11px;
+}
+
+/* Overflow users solid circle (+N) */
+.CompactWidget-overflowAvatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px solid var(--muted-color, #aab2bd);
+    background: var(--control-bg, rgba(0, 0, 0, 0.04));
+    color: var(--muted-more-color, #999);
+    font-size: 8px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* Hidden users dotted avatar */
+.CompactWidget-hiddenAvatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1.5px dashed var(--muted-color, #aab2bd);
+    background: transparent;
+    color: var(--muted-more-color, #999);
+    font-size: 9px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+/* --- Responsive --- */
+
+/* Mobile portrait — full width, justified items */
+@media (max-width: 767px) {
+    .CompactWidget {
+        width: 100%;
+        order: 100;
+    }
+
+    .CompactWidget-stats {
+        grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    }
+
+    .CompactWidget-stat {
+        justify-content: center;
+    }
+}
+
+/* Mobile & tablet landscape — hide the widget entirely */
+@media (max-width: 991px) and (orientation: landscape) {
+    .CompactWidget {
+        display: none !important;
+    }
+}

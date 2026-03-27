@@ -1,0 +1,6 @@
+/* Admin settings: disable online users settings when the toggle is off */
+.ekumanov-forum-widgets-online-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+    user-select: none;
+}
