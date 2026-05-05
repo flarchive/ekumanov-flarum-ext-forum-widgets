@@ -1,0 +1,6 @@
+/* Admin settings: disable dependent settings when their parent toggle/select is off */
+.ekumanov-forum-widgets-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+    user-select: none;
+}
