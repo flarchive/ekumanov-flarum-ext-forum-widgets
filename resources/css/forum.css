@@ -1,0 +1,480 @@
+/* ==========================================
+   Compact Forum Widget
+   ========================================== */
+
+.CompactWidget {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.CompactWidget--expanded {
+    z-index: 1000;
+}
+
+/* --- Stats bar --- */
+
+.CompactWidget-bar {
+    display: flex;
+    align-items: center;
+    padding: 5px 8px;
+    border-radius: 4px;
+    background: var(--control-bg, rgba(0, 0, 0, 0.04));
+    border: 1px solid var(--control-bg, rgba(0, 0, 0, 0.06));
+    min-height: 28px;
+    gap: 4px;
+}
+
+/* Classic sidebar layout: 2x2 grid */
+.CompactWidget-stats {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 4px;
+    min-width: 0;
+}
+
+/* Full-width layout: single row, equal columns */
+.CompactWidget--fullWidth .CompactWidget-stats {
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+}
+
+/* Full-bar mode: entire bar is clickable */
+.CompactWidget--fullBar .CompactWidget-bar {
+    cursor: pointer;
+}
+
+/* --- Stat items --- */
+
+.CompactWidget-stat {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    /* --cw-stat-size is set by fitStats() on mobile when a count would truncate */
+    font-size: var(--cw-stat-size, 12px);
+    color: var(--muted-more-color, #999);
+    cursor: default;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.CompactWidget-stat span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.CompactWidget-stat i {
+    font-size: calc(var(--cw-stat-size, 12px) - 1px);
+    opacity: 0.6;
+    flex-shrink: 0;
+}
+
+/* Desktop: match Flarum's 13px body text. Mobile stays at 12px — its bar shares
+   a narrow toolbar row with other buttons, and 13px truncates the counts on a
+   375px phone where 12px still fits. */
+.CompactWidget--desktop .CompactWidget-stat {
+    font-size: 13px;
+}
+
+.CompactWidget--desktop .CompactWidget-stat i {
+    font-size: 12px;
+}
+
+/* Online users stat — green icon */
+.CompactWidget-stat--online i {
+    color: #4CAF50;
+    opacity: 1;
+}
+
+/* Full-bar mode: whole bar is clickable */
+.CompactWidget--fullBar .CompactWidget-stat {
+    cursor: pointer;
+}
+
+/* Clickable online wrapper (desktop online-cell mode, mobile) — whole cell is the hit target */
+.CompactWidget-onlineWrapper[role="button"] {
+    cursor: pointer;
+}
+.CompactWidget-onlineWrapper[role="button"] .CompactWidget-stat {
+    cursor: pointer;
+}
+
+/* --- Online cell wrapper (inline toggle on mobile + online-cell desktop) --- */
+
+.CompactWidget-onlineWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-width: 0;
+    position: relative;
+}
+
+/* Above-footer variant: add breathing room above (separates from "Load more"
+   discussion button) and below (separates from the site footer). Uses a
+   double-class selector so it beats the mobile @media rule further down
+   that resets .CompactWidget margins. */
+.CompactWidget.CompactWidget--aboveFooter {
+    margin-top: 20px;
+    margin-bottom: 16px;
+}
+
+
+/* Inside-toolbar variant: match the height of the toolbar dropdown button */
+.CompactWidget--inToolbar {
+    flex: 1;
+    margin: 0;
+    align-self: center;
+}
+
+.CompactWidget--inToolbar .CompactWidget-bar {
+    min-height: 0;
+    padding: 9px 13px;
+}
+
+/* The desktop bar's 13px text would make it taller than the 36px toolbar
+   button beside it; pin the line box to the button's 20px and trim padding. */
+.CompactWidget--inToolbar.CompactWidget--desktop .CompactWidget-bar {
+    padding: 7px 13px;
+}
+
+.CompactWidget--inToolbar.CompactWidget--desktop .CompactWidget-stat {
+    line-height: 20px;
+}
+
+/* Same for mobile: 12px text at the default line-height would add 1.5px. */
+.CompactWidget--inToolbar.CompactWidget--mobile .CompactWidget-stat {
+    line-height: 16px;
+}
+
+/* Merged online/total stat on mobile inside-toolbar: force cursor to match the
+   wrapper's role=button, and keep the "N/M" tight next to the icon. */
+.CompactWidget-stat--merged {
+    cursor: pointer;
+}
+
+/* Text labels (full-width desktop only) */
+.CompactWidget-statLabel {
+    display: none;
+}
+
+@media (min-width: 768px) {
+    .CompactWidget--fullWidth .CompactWidget-statLabel {
+        display: inline;
+    }
+}
+
+/* --- Toggle arrow --- */
+
+.CompactWidget-toggle {
+    flex-shrink: 0;
+    align-self: center;
+    padding: 2px 4px !important;
+    min-width: 0 !important;
+    opacity: 0.4;
+    transition: opacity 0.15s;
+}
+
+.CompactWidget-toggle:hover {
+    opacity: 1;
+}
+
+.CompactWidget-toggle i {
+    font-size: 9px !important;
+}
+
+/* --- Expanded overlay panel --- */
+
+.CompactWidget-expanded {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: var(--body-bg, #fff);
+    border: 1px solid var(--control-bg, rgba(0, 0, 0, 0.1));
+    border-top: none;
+    border-radius: 0 0 var(--border-radius, 4px) var(--border-radius, 4px);
+    padding: 8px 10px;
+    box-shadow: 0 2px 6px var(--shadow-color, rgba(0, 0, 0, 0.15));
+    animation: compactWidgetSlideDown 0.15s ease-out;
+}
+
+/* Online-cell mode: panel anchored to and sized by the online wrapper.
+   max-width caps the panel so a very long username truncates via ellipsis
+   inside its row instead of expanding the panel past the bar / viewport. */
+.CompactWidget-onlineWrapper .CompactWidget-expanded {
+    right: auto;
+    border-top: 1px solid var(--control-bg, rgba(0, 0, 0, 0.1));
+    border-radius: var(--border-radius, 4px);
+    min-width: 200px;
+    max-width: min(360px, calc(100vw - 20px));
+}
+
+@keyframes compactWidgetSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.CompactWidget-expandedSection {
+    margin-bottom: 6px;
+}
+
+.CompactWidget-expandedSection:last-child {
+    margin-bottom: 0;
+}
+
+.CompactWidget-expandedLabel {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--muted-more-color, #999);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+}
+
+/* Green dot in expanded label */
+.CompactWidget-greenDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #4CAF50;
+    flex-shrink: 0;
+}
+
+/* Scrollable online users list. Sized to the viewport like core's dropdowns
+   (which use 70vh) but at half — the panel opens a third of the way down and
+   has the latest-registration section below it. dvh excludes mobile browser
+   chrome; the vh line is the fallback. 400px ≈ 15 desktop rows, and a
+   viewport-relative cap rarely lands on a row boundary, so a cut-off row
+   hints that the list scrolls. */
+.CompactWidget-expandedUsersList {
+    /* Escaped: Flarum compiles this file as LESS, whose own min() can't
+       compare vh with px and fails the whole stylesheet (core does the same
+       in HeaderDropdown.less). */
+    max-height: ~"min(50vh, 400px)";
+    max-height: ~"min(50dvh, 400px)";
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+
+.CompactWidget-expandedUser {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    text-decoration: none;
+    color: var(--text-color, inherit);
+    padding: 3px 4px;
+    border-radius: 4px;
+    transition: background 0.1s;
+}
+
+.CompactWidget--desktop .CompactWidget-expandedUser {
+    font-size: 13px;
+}
+
+/* Mobile: same 13px text, and ~36px rows — each row is a profile link, and
+   26px rows packed edge to edge are easy to mis-tap. */
+.CompactWidget--mobile .CompactWidget-expandedUser {
+    font-size: 13px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.CompactWidget-expandedUser:hover {
+    background: var(--control-bg, rgba(0, 0, 0, 0.04));
+    text-decoration: none;
+}
+
+.CompactWidget-expandedUser--overflow {
+    cursor: default;
+}
+
+.CompactWidget-expandedUser--overflow:hover {
+    background: transparent;
+}
+
+/* Visual break between "people we identify" (avatars + overflow) and
+   "count summaries" (hidden / guests). Pure-CSS approach: every summary row
+   carries the --summary class, but only the FIRST one in the list shows the
+   border — the :not(:first-child) guard suppresses it when the panel opens
+   straight onto a summary (no avatars above), and the adjacent-sibling rule
+   suppresses it for the second consecutive summary. */
+.CompactWidget-expandedUser--summary:not(:first-child) {
+    border-top: 1px solid var(--control-bg, rgba(0, 0, 0, 0.08));
+    margin-top: 6px;
+    padding-top: 8px;
+}
+
+.CompactWidget-expandedUser--summary + .CompactWidget-expandedUser--summary {
+    border-top: none;
+    margin-top: 0;
+    padding-top: 3px;
+}
+
+.CompactWidget--mobile .CompactWidget-expandedUser--summary + .CompactWidget-expandedUser--summary {
+    padding-top: 8px;
+}
+
+.CompactWidget-expandedUser--hidden {
+    cursor: default;
+}
+
+.CompactWidget-expandedUser--hidden:hover {
+    background: transparent;
+}
+
+.CompactWidget-expandedUser .Avatar {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    flex-shrink: 0;
+}
+
+.CompactWidget-expandedUsername {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+.CompactWidget-expandedUsername--muted {
+    color: var(--muted-color, #aab2bd);
+    font-style: italic;
+    font-size: 11px;
+}
+
+.CompactWidget--desktop .CompactWidget-expandedUsername--muted,
+.CompactWidget--mobile .CompactWidget-expandedUsername--muted {
+    font-size: 12px;
+}
+
+/* Count badges (overflow / hidden / guest). All three share the same shape +
+   sizing rules: circular for single-digit content, stretching to a pill for
+   multi-character content (e.g. "1.2K"). The corresponding JS uses
+   formatNumber() so the displayed text stays compact even for very large
+   counts, but min-width + padding keeps the badge readable if a future caller
+   passes a long literal. */
+.CompactWidget-overflowAvatar,
+.CompactWidget-hiddenAvatar,
+.CompactWidget-guestAvatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 4px;
+    border-radius: 10px;
+    color: var(--muted-more-color, #999);
+    font-size: 9px;
+    font-weight: 700;
+    flex-shrink: 0;
+    line-height: 1;
+}
+
+.CompactWidget-overflowAvatar {
+    border: 1.5px solid var(--muted-color, #aab2bd);
+    background: var(--control-bg, rgba(0, 0, 0, 0.04));
+    font-size: 8px;
+}
+
+.CompactWidget-hiddenAvatar {
+    border: 1.5px dashed var(--muted-color, #aab2bd);
+    background: transparent;
+}
+
+/* Dotted reads as "ephemeral / not registered" — distinct from dashed "hidden". */
+.CompactWidget-guestAvatar {
+    border: 2px dotted var(--muted-color, #aab2bd);
+    background: transparent;
+}
+
+/* Match the hidden row's non-interactive treatment */
+.CompactWidget-expandedUser--guest {
+    cursor: default;
+}
+
+.CompactWidget-expandedUser--guest:hover {
+    background: transparent;
+}
+
+/* --- Viewport show/hide --- */
+
+/* Desktop instance: hide on mobile */
+@media (max-width: 767px) {
+    .CompactWidget--desktop {
+        display: none !important;
+    }
+}
+
+/* Mobile instance: hide on desktop */
+@media (min-width: 768px) {
+    .CompactWidget--mobile {
+        display: none !important;
+    }
+}
+
+/* --- Responsive --- */
+
+/* Mobile portrait */
+@media (max-width: 767px) {
+    /* For contentItems placements (above/below toolbar, above footer): take full
+       row width and sit below the toolbar via flex order. Skip this for the
+       inside-toolbar variant — there the widget must stay in its natural flex
+       slot between "Latest" and the mark-all-read button. */
+    .CompactWidget:not(.CompactWidget--inToolbar) {
+        width: 100%;
+        order: 100;
+        margin-top: 4px;
+        margin-bottom: 8px;
+    }
+
+    /* Inside-toolbar mobile: align vertically with the sibling toolbar buttons
+       (both 36–38px tall) and don't grow beyond their row. */
+    .CompactWidget--inToolbar.CompactWidget--mobile {
+        margin: 0;
+    }
+
+    .CompactWidget-stats {
+        grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    }
+
+    /* Inside the toolbar every pixel counts: size cells to their content and
+       share the leftover space, rather than giving a short count like "2,401"
+       the same width as the longest one. fitStats() shrinks the text if even
+       that is not enough. */
+    /* ...and let the bar shrink below that content width (the flex cells
+       would otherwise set a min-content width and wrap the toolbar row). */
+    .CompactWidget--inToolbar.CompactWidget--mobile {
+        min-width: 0;
+    }
+
+    .CompactWidget--inToolbar .CompactWidget-stats {
+        display: flex;
+        justify-content: space-evenly;
+    }
+
+    .CompactWidget--inToolbar .CompactWidget-stats > * {
+        flex: 0 1 auto;
+        min-width: 0;
+    }
+}
+
+/* Landscape on small devices no longer hides the widget outright —
+   the 768px breakpoint already picks the right variant (mobile bar below/above
+   toolbar, or desktop bar in its configured position). Removing the former
+   blanket hide means an iPhone in landscape (≥768px CSS width → desktop layout)
+   now shows the desktop bar inside the toolbar between the "Latest" dropdown
+   and the mark-all-read button, as configured. */
