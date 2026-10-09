@@ -2,13 +2,24 @@
 
 > **Read-only archive of released versions of ekumanov/flarum-ext-forum-widgets.** Not for installation: use [Packagist](https://packagist.org/packages/ekumanov/flarum-ext-forum-widgets) or the [upstream repository](https://github.com/ekumanov/flarum-ext-forum-stats-widget).
 
-**0** versions archived · Latest: [`v1.6.12`](https://github.com/flarchive/ekumanov-flarum-ext-forum-widgets/tree/archive/v1.6.12) · License: `MIT` · Flarum: `^2.0`
+**30** versions archived · Latest: [`v1.6.12`](https://github.com/flarchive/ekumanov-flarum-ext-forum-widgets/tree/archive/v1.6.12) · License: `MIT` · Flarum: `^2.0`
 
 ## Archived Versions
 
 | Version | Released | Flarum | Source |
 |---|---|---|---|
-| — | — | — | — |
+| `v1.0.0` | 2026-03-26 | `^2.0` | [Browse](https://github.com/flarchive/ekumanov-flarum-ext-forum-widgets/tree/archive/v1.0.0) |
+| `v1.0.1` | 2026-03-27 | `^2.0` | [Browse](https://github.com/flarchive/ekumanov-flarum-ext-forum-widgets/tree/archive/v1.0.1) |
+| `v1.1.0` | 2026-03-29 | `^2.0` | [Browse](https://github.com/flarchive/ekumanov-flarum-ext-forum-widgets/tree/archive/v1.1.0) |
+| `v1.1.1` | 2026-03-29 | `^2.0` | [Browse](https://github.com/flarchive/ekumanov-flarum-ext-forum-widgets/tree/archive/v1.1.1) |
+| `v1.2.0` | 2026-04-18 | `^2.0` | [Browse](https://github.com/flarchive/ekumanov-flarum-ext-forum-widgets/tree/archive/v1.2.0) |
+| `v1.2.1` | 2026-04-18 | `^2.0` | [Browse](https://github.com/flarchive/ekumanov-flarum-ext-forum-widgets/tree/archive/v1.2.1) |
+| `v1.2.2` | 2026-04-18 | `^2.0` | [Browse](https://github.com/flarchive/ekumanov-flarum-ext-forum-widgets/tree/archive/v1.2.2) |
+| `v1.2.3` | 2026-04-18 | `^2.0` | [Browse](https://github.com/flarchive/ekumanov-flarum-ext-forum-widgets/tree/archive/v1.2.3) |
+| `v1.2.4` | 2026-04-18 | `^2.0` | [Browse](https://github.com/flarchive/ekumanov-flarum-ext-forum-widgets/tree/archive/v1.2.4) |
+| `v1.2.5` | 2026-04-18 | `^2.0` | [Browse](https://github.com/flarchive/ekumanov-flarum-ext-forum-widgets/tree/archive/v1.2.5) |
+
+[View all 30 versions](https://github.com/flarchive/ekumanov-flarum-ext-forum-widgets/tags)
 
 Catalog entry: [packages/ekumanov-flarum-ext-forum-widgets.json](https://github.com/flarchive/archive-index/blob/main/packages/ekumanov-flarum-ext-forum-widgets.json)
 
